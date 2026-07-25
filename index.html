@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Lab - Cadastro de Usuarios</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div>
+            <p class="eyebrow">Projeto de estudo QA</p>
+            <h1>QA Lab de Cadastro</h1>
+            <p class="header-copy">Fluxos reais para praticar testes funcionais, validação, API e layout responsivo.</p>
+        </div>
+
+        <div class="api-status" data-status="loading" data-testid="api-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div>
+                <strong id="apiStatusLabel">Conectando API</strong>
+                <small id="apiStatusDetail">Verificando servidor local...</small>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-layout">
+        <section class="panel form-panel" aria-labelledby="formTitle">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Fluxo principal</p>
+                    <h2 id="formTitle">Cadastrar usuario</h2>
+                </div>
+                <button class="secondary-button" id="resetFormButton" type="button" data-testid="reset-form-button">Limpar</button>
+            </div>
+
+            <form id="userForm" novalidate data-testid="user-form">
+                <div class="field-group">
+                    <label for="fullName">Nome completo</label>
+                    <input type="text" id="fullName" name="fullName" autocomplete="name" data-testid="full-name-input" placeholder="Ex.: Ana Paula Costa">
+                    <small class="field-hint">Use nome e sobrenome.</small>
+                    <p class="field-error" id="fullNameError" data-testid="full-name-error"></p>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" autocomplete="email" data-testid="email-input" placeholder="ana@email.com">
+                        <p class="field-error" id="emailError" data-testid="email-error"></p>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" name="cpf" inputmode="numeric" maxlength="14" data-testid="cpf-input" placeholder="000.000.000-00">
+                        <p class="field-error" id="cpfError" data-testid="cpf-error"></p>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="phone">Telefone</label>
+                        <input type="tel" id="phone" name="phone" inputmode="tel" maxlength="15" data-testid="phone-input" placeholder="(11) 99999-9999">
+                        <p class="field-error" id="phoneError" data-testid="phone-error"></p>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="role">Perfil</label>
+                        <select id="role" name="role" data-testid="role-select">
+                            <option value="">Selecione</option>
+                            <option value="qa-junior">QA Junior</option>
+                            <option value="qa-analyst">QA Analyst</option>
+                            <option value="qa-automation">QA Automation</option>
+                            <option value="product">Product Owner</option>
+                        </select>
+                        <p class="field-error" id="roleError" data-testid="role-error"></p>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" name="password" autocomplete="new-password" data-testid="password-input" placeholder="8+ caracteres">
+                        <div class="strength-meter" aria-hidden="true">
+                            <span id="strengthBar"></span>
+                        </div>
+                        <small id="strengthLabel" class="field-hint">Força da senha: vazia</small>
+                        <p class="field-error" id="passwordError" data-testid="password-error"></p>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="confirmPassword">Confirmar senha</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" data-testid="confirm-password-input">
+                        <p class="field-error" id="confirmPasswordError" data-testid="confirm-password-error"></p>
+                    </div>
+                </div>
+
+                <fieldset class="contact-options">
+                    <legend>Canal preferido</legend>
+                    <label>
+                        <input type="radio" name="contactPreference" value="email" checked>
+                        E-mail
+                    </label>
+                    <label>
+                        <input type="radio" name="contactPreference" value="phone">
+                        Telefone
+                    </label>
+                </fieldset>
+
+                <label class="checkbox-field">
+                    <input type="checkbox" id="terms" name="terms" data-testid="terms-checkbox">
+                    <span>Confirmo que os dados sao ficticios e podem ser usados no laboratorio.</span>
+                </label>
+                <p class="field-error" id="termsError" data-testid="terms-error"></p>
+
+                <div class="form-actions">
+                    <button class="primary-button" id="submitButton" type="submit" data-testid="submit-button">Cadastrar</button>
+                    <span id="formStatus" class="form-status" role="status" aria-live="polite" data-testid="form-status"></span>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel list-panel" aria-labelledby="listTitle">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Base integrada</p>
+                    <h2 id="listTitle">Usuarios cadastrados</h2>
+                </div>
+                <button class="danger-button" id="resetDataButton" type="button" data-testid="reset-data-button">Resetar massa</button>
+            </div>
+
+            <div class="metrics-grid" aria-label="Resumo dos usuarios">
+                <article>
+                    <span id="totalUsers">0</span>
+                    <small>Total</small>
+                </article>
+                <article>
+                    <span id="activeUsers">0</span>
+                    <small>Ativos</small>
+                </article>
+                <article>
+                    <span id="inactiveUsers">0</span>
+                    <small>Inativos</small>
+                </article>
+            </div>
+
+            <div class="toolbar">
+                <label class="search-field" for="searchInput">
+                    <span>Buscar</span>
+                    <input type="search" id="searchInput" data-testid="search-input" placeholder="Nome, e-mail ou CPF">
+                </label>
+
+                <label for="statusFilter">
+                    <span>Status</span>
+                    <select id="statusFilter" data-testid="status-filter">
+                        <option value="all">Todos</option>
+                        <option value="active">Ativos</option>
+                        <option value="inactive">Inativos</option>
+                    </select>
+                </label>
+
+                <label for="roleFilter">
+                    <span>Perfil</span>
+                    <select id="roleFilter" data-testid="role-filter">
+                        <option value="all">Todos</option>
+                        <option value="qa-junior">QA Junior</option>
+                        <option value="qa-analyst">QA Analyst</option>
+                        <option value="qa-automation">QA Automation</option>
+                        <option value="product">Product Owner</option>
+                    </select>
+                </label>
+
+                <label for="sortSelect">
+                    <span>Ordenar</span>
+                    <select id="sortSelect" data-testid="sort-select">
+                        <option value="createdAt:desc">Mais recentes</option>
+                        <option value="createdAt:asc">Mais antigos</option>
+                        <option value="fullName:asc">Nome A-Z</option>
+                        <option value="fullName:desc">Nome Z-A</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Perfil</th>
+                            <th>Status</th>
+                            <th>Contato</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody" data-testid="users-table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="empty-state hidden" id="emptyState" data-testid="empty-state">
+                <strong>Nenhum usuario encontrado</strong>
+                <p>Ajuste os filtros ou cadastre um novo usuario para validar o fluxo.</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast hidden" id="toast" role="status" aria-live="polite" data-testid="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

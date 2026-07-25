@@ -1,0 +1,46 @@
+[
+  {
+    "id": "usr_demo_alpha",
+    "fullName": "Usuario Demo Alpha",
+    "email": "usuario.demo.alpha@example.com",
+    "cpf": "234.567.890-92",
+    "phone": "(99) 90000-0001",
+    "role": "qa-analyst",
+    "contactPreference": "email",
+    "status": "active",
+    "createdAt": "2026-05-18T13:20:00.000Z"
+  },
+  {
+    "id": "usr_demo_beta",
+    "fullName": "Usuario Demo Beta",
+    "email": "usuario.demo.beta@example.com",
+    "cpf": "345.678.901-75",
+    "phone": "(99) 90000-0002",
+    "role": "qa-automation",
+    "contactPreference": "phone",
+    "status": "active",
+    "createdAt": "2026-05-19T10:15:00.000Z"
+  },
+  {
+    "id": "usr_demo_gamma",
+    "fullName": "Usuario Demo Gamma",
+    "email": "usuario.demo.gamma@example.com",
+    "cpf": "456.789.012-49",
+    "phone": "(99) 90000-0003",
+    "role": "product",
+    "contactPreference": "email",
+    "status": "inactive",
+    "createdAt": "2026-05-20T08:30:00.000Z"
+  },
+  {
+    "id": "usr_cd62679d",
+    "fullName": "Giovanna Hernandez King",
+    "email": "giovanna72739@gmail.com",
+    "cpf": "42522289640",
+    "phone": "(81) 9999-0000",
+    "role": "qa-junior",
+    "contactPreference": "email",
+    "status": "active",
+    "createdAt": "2026-07-25T00:57:57.543Z"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "name": "qa-lab-cadastro",
+  "version": "2.0.0",
+  "description": "Aplicacao simples com front-end e API local para praticar testes de QA.",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test:api": "node tests/api-smoke.js"
+  },
+  "keywords": [
+    "qa",
+    "testing",
+    "frontend",
+    "api"
+  ],
+  "license": "MIT"
+}

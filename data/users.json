@@ -31,16 +31,5 @@
     "contactPreference": "email",
     "status": "inactive",
     "createdAt": "2026-05-20T08:30:00.000Z"
-  },
-  {
-    "id": "usr_cd62679d",
-    "fullName": "Giovanna Hernandez King",
-    "email": "giovanna72739@gmail.com",
-    "cpf": "42522289640",
-    "phone": "(81) 9999-0000",
-    "role": "qa-junior",
-    "contactPreference": "email",
-    "status": "active",
-    "createdAt": "2026-07-25T00:57:57.543Z"
   }
 ]

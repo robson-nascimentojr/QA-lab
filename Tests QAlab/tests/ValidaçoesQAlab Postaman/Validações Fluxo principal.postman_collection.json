@@ -1,0 +1,3795 @@
+{
+  "info": {
+    "_postman_id": "a219c095-9e14-4327-9be4-05dd584f257c",
+    "name": "Validações Fluxo principal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53535899",
+    "_collection_link": "https://go.postman.co/collection/53535899-a219c095-9e14-4327-9be4-05dd584f257c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Campo validados",
+      "item": [
+        {
+          "name": "Nome completo",
+          "item": [
+            {
+              "name": "NmCompleto Válido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();",
+                      "const user = jsonData.user;",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NomeCompleto\", function () {",
+                      "    pm.expect(pm.variables.get(\"NomeCompleto\")).to.eql(user.fullName);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar Email\", function () {",
+                      "    pm.expect(pm.variables.get(\"EMAIL\")).to.eql(user.email);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NumberCell\", function () {",
+                      "    pm.expect(pm.variables.get(\"NumberCell\")).to.eql(user.phone);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar TipoUsuario\", function () {",
+                      "    const validRoles = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];",
+                      "    pm.expect(validRoles).to.include(user.role);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar CpfValido\", function () {",
+                      "    pm.expect(pm.variables.get(\"CpfValido\")).to.eql(user.cpf);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar status user\", function () {",
+                      "    pm.expect(user.status).to.eql(\"active\");",
+                      "});",
+                      "",
+                      "pm.environment.set(\"ID\", user.id.toString());"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "NmCompleto number",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Nome Completo não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"fullName deve ser vazio\", function() {",
+                      "    pm.expect(response.details.fullName).to.be.eql(\"Inclua nome e sobrenome.\");",
+                      "});",
+                      "console.log(response.user.fullName);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"Robson do Nscimento 193943\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Apenas números",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Nome Completo não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"fullName deve ser vazio\", function() {",
+                      "    pm.expect(response.details.fullName).to.be.eql(\"Inclua nome e sobrenome.\");",
+                      "});",
+                      "console.log(response.details && response.details.fullName);",
+                      "console.log(pm.variables.get(\"NomeCompleto\"))"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \" 011093\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Nm completo carac. Especial",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 400 or 422\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                      "});",
+                      "",
+                      "pm.test(\"Nome Completo não deve existir no objeto user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"fullName deve ser vazio\", function() {",
+                      "    pm.expect(response.details.fullName).to.be.eql(\"Inclua nome e sobrenome.\");",
+                      "});",
+                      "",
+                      "console.log(response.user.fullName);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"Vivi@ane M@ria @lves\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Nm Completo vazio",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Status code is 422 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Nome Completo não deve existir no response como user\", function () {\r",
+                      "    pm.expect(response.user).to.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"fullName é vazio\", function() {\r",
+                      "    pm.expect(response.details.fullName).to.be.eql(\"Informe o nome completo.\");\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Nm Completo minúsculo",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Status code is 422 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Nome Completo não deve existir no response como user\", function () {\r",
+                      "    pm.expect(response.user).to.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"fullName é vazio\", function() {\r",
+                      "    pm.expect(response.details.fullName).to.be.eql(\"Informe o nome completo.\");\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"sofia clemente velez\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Nm Completo maiúscula",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Status code is 422 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Nome Completo não deve existir no response como user\", function () {\r",
+                      "    pm.expect(response.user).to.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"fullName é vazio\", function() {\r",
+                      "    pm.expect(response.details.fullName).to.be.eql(\"Informe o nome completo.\");\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"PAULO RICARDO\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Nm Completo sem espaço",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Status code is 422 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Nome Completo não deve existir no response como user\", function () {\r",
+                      "    pm.expect(response.user).to.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"fullName é vazio\", function() {\r",
+                      "    pm.expect(response.details.fullName).to.be.eql(\"Inclua nome e sobrenome.\");\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"PAULOJOGAFACIL\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "requests": {},
+                "exec": [
+                  "// Gera um nome e um sobrenome e depois junta para formar o nome NomeCompleto",
+                  "function getFirstName() {",
+                  "    var names = [\"Miguel\", \"Sophia\", \"Davi\", \"Alice\", \"Arthur\", \"Julia\", \"Pedro\", \"Isabella\", \"Gabriel\", \"Manuela\", \"Bernardo\", \"Laura\", \"Lucas\", \"Flávia\", \"Luiza\", \"Matheus\", \"Noah\", \"Valentina\", \"Rafael\", \"Giovanna\", \"Heitor\", \"Enzo\", \"Helena\", \"Guilherme\", \"Beatriz\", \"Nicolas\", \"Leticia\", \"Lorenzo\", \"Lara\", \"Gustavo\", \"Mariana\", \"Felipe\"];",
+                  "    var randomItem = names[Math.floor(Math.random() * names.length)];",
+                  "    return randomItem;",
+                  "}",
+                  "",
+                  "function getLastName() {",
+                  "    var lastNames = [\"Alves da Silva\", \"Andrade Barbosa\", \"Barbosa Oliveira\", \"Oliveira da Silva\", \"Alves Pereira\", \"Conceição Barbosa\", \"Allen Young\", \"Hernandez King\", \"Wright Lopez\", \"Hill Scott\", \"Green Adams\", \"Conceição da Costa\", \"da Costa Oliveira\", \"Rodrigues de Oliveira\"];",
+                  "    var randomItem = lastNames[Math.floor(Math.random() * lastNames.length)];",
+                  "    return randomItem;",
+                  "}",
+                  "",
+                  "var fName = getFirstName();",
+                  "var lName = getLastName();",
+                  "",
+                  "pm.environment.set(\"FirstName\", fName);",
+                  "pm.environment.set(\"LastName\", lName);",
+                  "pm.environment.set(\"NomeCompleto\", fName + \" \" + lName);",
+                  "",
+                  "function getNumbeForEmail(vezes){",
+                  "    const numerosemail = [\"1\", \"2\", \"3\", \"4\", \"5\", \"7\", \"8\", \"9\", \"10\"]",
+                  "    var randomNumber = \"\";",
+                  "",
+                  "    for (let i = 0; i < vezes; i++) {",
+                  "        const indiceAleatorio = Math.floor(Math.random() * numerosemail.length);",
+                  "        randomNumber += numerosemail[indiceAleatorio];",
+                  "    }",
+                  "    return randomNumber",
+                  "}",
+                  "pm.environment.set(\"EMAIL\", fName.toLocaleLowerCase() + getNumbeForEmail(5) + \"@\" + \"gmail\" + \".com\");",
+                  "",
+                  "",
+                  "function gerarCPF() {",
+                  "    const numAleatorio = (n) => Math.round(Math.random() * n);",
+                  "    const mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));",
+                  "",
+                  "    const n1 = numAleatorio(9);",
+                  "    const n2 = numAleatorio(9);",
+                  "    const n3 = numAleatorio(9);",
+                  "    const n4 = numAleatorio(9);",
+                  "    const n5 = numAleatorio(9);",
+                  "    const n6 = numAleatorio(9);",
+                  "    const n7 = numAleatorio(9);",
+                  "    const n8 = numAleatorio(9);",
+                  "    const n9 = numAleatorio(9);",
+                  "",
+                  "    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;",
+                  "    d1 = 11 - (mod(d1, 11));",
+                  "    if (d1 >= 10) d1 = 0;",
+                  "    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;",
+                  "    d2 = 11 - (mod(d2, 11));",
+                  "    if (d2 >= 10) d2 = 0;",
+                  "    // Retorna o CPF formatado: 000.000.000-00",
+                  "    return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;",
+                  "    ",
+                  "    // Se a sua API exigir APENAS números (sem pontos e hífen), use a linha abaixo:",
+                  "    // return `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;",
+                  "}",
+                  "",
+                  "// Salva o CPF gerado em uma variável de escopo local (Collection Variable)",
+                  "pm.collectionVariables.set(\"CpfValido\", gerarCPF());",
+                  "",
+                  "// numero de celular",
+                  "var numero = \"(81) 9999-0000\";",
+                  "pm.environment.set(\"NumberCell\", numero);",
+                  "",
+                  "// tipo do usuario",
+                  "function TypeRole () {",
+                  "    var TypeUsers = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];",
+                  "    var randomItem = TypeUsers[Math.floor(Math.random() * TypeUsers.length)];",
+                  "    return randomItem",
+                  "}",
+                  "pm.environment.set(\"TipoUsuario\", TypeRole() )",
+                  "",
+                  "function TypeCanalPreferido () {",
+                  "    var typeCanal = [\"email\", \"phone\"]",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]",
+                  "   return randomitemcanal",
+                  "}",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())",
+                  "",
+                  "// gera senhas de tamanho 8",
+                  "function gerarSenhaAleatoria(tamanhoMaximo) {",
+                  "    const caracteresMAIUSCULOS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";",
+                  "    const caracteresMINUSCULOS = \"abcdefghijklmnopqrstuvwxyz\";",
+                  "    const caracteresESPECIAIS = \"!@#$%^&*()_+-=[]{}|;:,.<>?\"",
+                  "    const numerossenhas= \"1234567890\"",
+                  "",
+                  "    let senha = \"\";",
+                  "    ",
+                  "    for (let i = 0; i < tamanhoMaximo; i++) {",
+                  "        indiceAleatorio = Math.floor(Math.random() * caracteresMAIUSCULOS.length);",
+                  "        senha += caracteresMAIUSCULOS.charAt(indiceAleatorio);",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresMINUSCULOS.length);",
+                  "        senha +=  caracteresMINUSCULOS.charAt(indiceAleatorio);",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresESPECIAIS.length);",
+                  "        senha +=  caracteresESPECIAIS.charAt(indiceAleatorio)",
+                  "        indiceAleatorio = Math.floor(Math.random() *  numerossenhas.length);",
+                  "        senha +=  numerossenhas.charAt(indiceAleatorio)",
+                  "    }",
+                  "    ",
+                  "    return senha;",
+                  "}",
+                  "",
+                  "// Gera uma senha de 8 dígitos e salva na variável \"senhaValida\"",
+                  "pm.collectionVariables.set(\"SenhaValida\", gerarSenhaAleatoria(8));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Email",
+          "item": [
+            {
+              "name": "Email válido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();",
+                      "const user = jsonData.user;",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NomeCompleto\", function () {",
+                      "    pm.expect(pm.variables.get(\"NomeCompleto\")).to.eql(user.fullName);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar Email\", function () {",
+                      "    pm.expect(pm.variables.get(\"EMAIL\")).to.eql(user.email);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NumberCell\", function () {",
+                      "    pm.expect(pm.variables.get(\"NumberCell\")).to.eql(user.phone);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar TipoUsuario\", function () {",
+                      "    const validRoles = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];",
+                      "    pm.expect(validRoles).to.include(user.role);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar CpfValido\", function () {",
+                      "    pm.expect(pm.variables.get(\"CpfValido\")).to.eql(user.cpf);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar status user\", function () {",
+                      "    pm.expect(user.status).to.eql(\"active\");",
+                      "});",
+                      "",
+                      "pm.environment.set(\"ID\", user.id.toString());"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Email number",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Email não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Email message\", function () {",
+                      "    pm.expect(response.details.email).to.equal(\"Informe um e-mail valido.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Email enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).email",
+                      "    var variavel_emal = pm.response.json().details.email",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_emal)",
+                      "})",
+                      "console.log(response.details.email)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"12345678\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Email carac. Especial",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 400 or 422\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                      "});",
+                      "",
+                      "pm.test(\"Email não deve existir no objeto user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Email message\", function () {",
+                      "    pm.expect(response.details.email).to.equal(\"Informe um e-mail valido.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Email enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).email",
+                      "    var variavel_emal = pm.response.json().details.email",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_emal)",
+                      "})",
+                      "",
+                      "console.log(response.details.email);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"Jrrobson21!)#*+@gmail\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Email vazio",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Status code is 422 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Email não deve existir no response como user\", function () {\r",
+                      "    pm.expect(response.user).to.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Email é vazio\", function() {\r",
+                      "    pm.expect(response.details.email).to.be.eql(\"Informe o e-mail.\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Email enviado é diferente do gravado\", function() {\r",
+                      "    \r",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).email\r",
+                      "    var variavel_emal = pm.response.json().details.email\r",
+                      "    \r",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_emal)\r",
+                      "})\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Email maiúscula",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Email enviado é diferente do gravado\", function() {",
+                      "    var variavel_emal = pm.response.json().user.email",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).email",
+                      "",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_emal)",
+                      "})",
+                      "",
+                      "pm.test(\"Email deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.not.be.undefined;",
+                      "});",
+                      "pm.test(\"Email message\", function () {",
+                      "    pm.expect(response.user.email).to.eql(response.user.email);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"ROBSONNASCIMENTOJR08@gmail.com\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Email com espaço",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Status code is 422 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Email não deve existir no response como user\", function () {\r",
+                      "    pm.expect(response.user).to.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Email message\", function () {\r",
+                      "    pm.expect(response.details.email).to.equal(\"Informe um e-mail valido.\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Email enviado é diferente do gravado\", function() {\r",
+                      "    \r",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).email\r",
+                      "    var variavel_emal = pm.response.json().details.email\r",
+                      "    \r",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_emal)\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"robinho coins @gmail.com\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Email sem @",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Status code is 422 or 400\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Email não deve existir no response como user\", function () {\r",
+                      "    pm.expect(response.user).to.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Email message\", function () {\r",
+                      "    pm.expect(response.details.email).to.equal(\"Informe um e-mail valido.\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Email enviado é diferente do gravado\", function() {\r",
+                      "    \r",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).email\r",
+                      "    var variavel_emal = pm.response.json().details.email\r",
+                      "    \r",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_emal)\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"robsongmail.com\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "// Gera um nome e um sobrenome e depois junta para formar o nome NomeCompleto\r",
+                  "function getFirstName() {\r",
+                  "    var names = [\"Miguel\", \"Sophia\", \"Davi\", \"Alice\", \"Arthur\", \"Julia\", \"Pedro\", \"Isabella\", \"Gabriel\", \"Manuela\", \"Bernardo\", \"Laura\", \"Lucas\", \"Flávia\", \"Luiza\", \"Matheus\", \"Noah\", \"Valentina\", \"Rafael\", \"Giovanna\", \"Heitor\", \"Enzo\", \"Helena\", \"Guilherme\", \"Beatriz\", \"Nicolas\", \"Leticia\", \"Lorenzo\", \"Lara\", \"Gustavo\", \"Mariana\", \"Felipe\"];\r",
+                  "    var randomItem = names[Math.floor(Math.random() * names.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "function getLastName() {\r",
+                  "    var lastNames = [\"Alves da Silva\", \"Andrade Barbosa\", \"Barbosa Oliveira\", \"Oliveira da Silva\", \"Alves Pereira\", \"Conceição Barbosa\", \"Allen Young\", \"Hernandez King\", \"Wright Lopez\", \"Hill Scott\", \"Green Adams\", \"Conceição da Costa\", \"da Costa Oliveira\", \"Rodrigues de Oliveira\"];\r",
+                  "    var randomItem = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "var fName = getFirstName();\r",
+                  "var lName = getLastName();\r",
+                  "\r",
+                  "pm.environment.set(\"FirstName\", fName);\r",
+                  "pm.environment.set(\"LastName\", lName);\r",
+                  "pm.environment.set(\"NomeCompleto\", fName + \" \" + lName);\r",
+                  "\r",
+                  "function getNumbeForEmail(vezes){\r",
+                  "    const numerosemail = [\"1\", \"2\", \"3\", \"4\", \"5\", \"7\", \"8\", \"9\", \"10\"]\r",
+                  "    var randomNumber = \"\";\r",
+                  "\r",
+                  "    for (let i = 0; i < vezes; i++) {\r",
+                  "        const indiceAleatorio = Math.floor(Math.random() * numerosemail.length);\r",
+                  "        randomNumber += numerosemail[indiceAleatorio];\r",
+                  "    }\r",
+                  "    return randomNumber\r",
+                  "}\r",
+                  "pm.environment.set(\"EMAIL\", fName.toLocaleLowerCase() + getNumbeForEmail(5) + \"@\" + \"gmail\" + \".com\");\r",
+                  "\r",
+                  "\r",
+                  "function gerarCPF() {\r",
+                  "    const numAleatorio = (n) => Math.round(Math.random() * n);\r",
+                  "    const mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));\r",
+                  "\r",
+                  "    const n1 = numAleatorio(9);\r",
+                  "    const n2 = numAleatorio(9);\r",
+                  "    const n3 = numAleatorio(9);\r",
+                  "    const n4 = numAleatorio(9);\r",
+                  "    const n5 = numAleatorio(9);\r",
+                  "    const n6 = numAleatorio(9);\r",
+                  "    const n7 = numAleatorio(9);\r",
+                  "    const n8 = numAleatorio(9);\r",
+                  "    const n9 = numAleatorio(9);\r",
+                  "\r",
+                  "    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;\r",
+                  "    d1 = 11 - (mod(d1, 11));\r",
+                  "    if (d1 >= 10) d1 = 0;\r",
+                  "    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;\r",
+                  "    d2 = 11 - (mod(d2, 11));\r",
+                  "    if (d2 >= 10) d2 = 0;\r",
+                  "    // Retorna o CPF formatado: 000.000.000-00\r",
+                  "    return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;\r",
+                  "    \r",
+                  "    // Se a sua API exigir APENAS números (sem pontos e hífen), use a linha abaixo:\r",
+                  "    // return `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;\r",
+                  "}\r",
+                  "\r",
+                  "// Salva o CPF gerado em uma variável de escopo local (Collection Variable)\r",
+                  "pm.collectionVariables.set(\"CpfValido\", gerarCPF());\r",
+                  "\r",
+                  "// numero de celular\r",
+                  "var numero = \"(81) 9999-0000\";\r",
+                  "pm.environment.set(\"NumberCell\", numero);\r",
+                  "\r",
+                  "// tipo do usuario\r",
+                  "function TypeRole () {\r",
+                  "    var TypeUsers = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];\r",
+                  "    var randomItem = TypeUsers[Math.floor(Math.random() * TypeUsers.length)];\r",
+                  "    return randomItem\r",
+                  "}\r",
+                  "pm.environment.set(\"TipoUsuario\", TypeRole() )\r",
+                  "\r",
+                  "function TypeCanalPreferido () {\r",
+                  "    var typeCanal = [\"email\", \"phone\"]\r",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]\r",
+                  "   return randomitemcanal\r",
+                  "}\r",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())\r",
+                  "\r",
+                  "// gera senhas de tamanho 8\r",
+                  "function gerarSenhaAleatoria(tamanhoMaximo) {\r",
+                  "    const caracteresMAIUSCULOS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+                  "    const caracteresMINUSCULOS = \"abcdefghijklmnopqrstuvwxyz\";\r",
+                  "    const caracteresESPECIAIS = \"!@#$%^&*()_+-=[]{}|;:,.<>?\"\r",
+                  "    const numerossenhas= \"1234567890\"\r",
+                  "\r",
+                  "    let senha = \"\";\r",
+                  "    \r",
+                  "    for (let i = 0; i < tamanhoMaximo; i++) {\r",
+                  "        indiceAleatorio = Math.floor(Math.random() * caracteresMAIUSCULOS.length);\r",
+                  "        senha += caracteresMAIUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresMINUSCULOS.length);\r",
+                  "        senha +=  caracteresMINUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresESPECIAIS.length);\r",
+                  "        senha +=  caracteresESPECIAIS.charAt(indiceAleatorio)\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  numerossenhas.length);\r",
+                  "        senha +=  numerossenhas.charAt(indiceAleatorio)\r",
+                  "    }\r",
+                  "    \r",
+                  "    return senha;\r",
+                  "}\r",
+                  "\r",
+                  "// Gera uma senha de 8 dígitos e salva na variável \"senhaValida\"\r",
+                  "pm.collectionVariables.set(\"SenhaValida\", gerarSenhaAleatoria(8));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CPF",
+          "item": [
+            {
+              "name": "CPF válido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();",
+                      "const user = jsonData.user;",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NomeCompleto\", function () {",
+                      "    pm.expect(pm.variables.get(\"NomeCompleto\")).to.eql(user.fullName);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar Email\", function () {",
+                      "    pm.expect(pm.variables.get(\"EMAIL\")).to.eql(user.email);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NumberCell\", function () {",
+                      "    pm.expect(pm.variables.get(\"NumberCell\")).to.eql(user.phone);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar TipoUsuario\", function () {",
+                      "    const validRoles = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];",
+                      "    pm.expect(validRoles).to.include(user.role);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar CpfValido\", function () {",
+                      "    pm.expect(pm.variables.get(\"CpfValido\")).to.eql(user.cpf);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar status user\", function () {",
+                      "    pm.expect(user.status).to.eql(\"active\");",
+                      "});",
+                      "",
+                      "pm.environment.set(\"ID\", user.id.toString());"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "CPF sem validação",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"CPF não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"CPF message\", function () {",
+                      "    pm.expect(response.details.cpf).to.equal(\"CPF invalido.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Cpf enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).cpf",
+                      "    var variavel_cpf = pm.response.json().details.cpf",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_cpf)",
+                      "})",
+                      "console.log(response.details.cpf)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"12345678\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "CPF com letras",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"CPF não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"CPF message\", function () {",
+                      "    pm.expect(response.details.cpf).to.equal(\"CPF invalido.\");",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Cpf enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).cpf",
+                      "    var variavel_cpf = pm.response.json().details.cpf",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_cpf)",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"Bbbbbbbbbbb\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cpf vazio",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"CPF não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"CPF message\", function () {",
+                      "    pm.expect(response.details.cpf).to.equal(\"Informe o CPF.\");",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Cpf enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).cpf",
+                      "    var variavel_cpf = pm.response.json().details.cpf",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_cpf)",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cpf com espaço",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"CPF não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"CPF message\", function () {",
+                      "    pm.expect(response.details.cpf).to.equal(\"Informe o CPF.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Cpf enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).cpf",
+                      "    var variavel_cpf = pm.response.json().details.cpf",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_cpf)",
+                      "})",
+                      "// No front não é permitido usar espaço (BUG)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"425 222 896 40\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cpf formatado",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"CPF deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.not.be.undefined;",
+                      "});",
+                      "",
+                      "pm.test(\"Cpf enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).cpf",
+                      "    var variavel_cpf = pm.response.json().user.cpf",
+                      "    ",
+                      "    pm.expect(variavel_body).to.eql(variavel_cpf)",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"425.222.896-40\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cpf não formatado",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"CPF deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.not.be.undefined;",
+                      "});",
+                      "",
+                      "pm.test(\"Cpf enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).cpf",
+                      "    var variavel_cpf = pm.response.json().user.cpf",
+                      "    ",
+                      "    pm.expect(variavel_body).to.eql(variavel_cpf)",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"42522289640\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cpf num",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"CPF não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"CPF message\", function () {",
+                      "    pm.expect(response.message).to.equal(\"JSON invalido.\");",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": 425 222 896 40,\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "// Gera um nome e um sobrenome e depois junta para formar o nome NomeCompleto\r",
+                  "function getFirstName() {\r",
+                  "    var names = [\"Miguel\", \"Sophia\", \"Davi\", \"Alice\", \"Arthur\", \"Julia\", \"Pedro\", \"Isabella\", \"Gabriel\", \"Manuela\", \"Bernardo\", \"Laura\", \"Lucas\", \"Flávia\", \"Luiza\", \"Matheus\", \"Noah\", \"Valentina\", \"Rafael\", \"Giovanna\", \"Heitor\", \"Enzo\", \"Helena\", \"Guilherme\", \"Beatriz\", \"Nicolas\", \"Leticia\", \"Lorenzo\", \"Lara\", \"Gustavo\", \"Mariana\", \"Felipe\"];\r",
+                  "    var randomItem = names[Math.floor(Math.random() * names.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "function getLastName() {\r",
+                  "    var lastNames = [\"Alves da Silva\", \"Andrade Barbosa\", \"Barbosa Oliveira\", \"Oliveira da Silva\", \"Alves Pereira\", \"Conceição Barbosa\", \"Allen Young\", \"Hernandez King\", \"Wright Lopez\", \"Hill Scott\", \"Green Adams\", \"Conceição da Costa\", \"da Costa Oliveira\", \"Rodrigues de Oliveira\"];\r",
+                  "    var randomItem = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "var fName = getFirstName();\r",
+                  "var lName = getLastName();\r",
+                  "\r",
+                  "pm.environment.set(\"FirstName\", fName);\r",
+                  "pm.environment.set(\"LastName\", lName);\r",
+                  "pm.environment.set(\"NomeCompleto\", fName + \" \" + lName);\r",
+                  "\r",
+                  "function getNumbeForEmail(vezes){\r",
+                  "    const numerosemail = [\"1\", \"2\", \"3\", \"4\", \"5\", \"7\", \"8\", \"9\", \"10\"]\r",
+                  "    var randomNumber = \"\";\r",
+                  "\r",
+                  "    for (let i = 0; i < vezes; i++) {\r",
+                  "        const indiceAleatorio = Math.floor(Math.random() * numerosemail.length);\r",
+                  "        randomNumber += numerosemail[indiceAleatorio];\r",
+                  "    }\r",
+                  "    return randomNumber\r",
+                  "}\r",
+                  "pm.environment.set(\"EMAIL\", fName.toLocaleLowerCase() + getNumbeForEmail(5) + \"@\" + \"gmail\" + \".com\");\r",
+                  "\r",
+                  "\r",
+                  "function gerarCPF() {\r",
+                  "    const numAleatorio = (n) => Math.round(Math.random() * n);\r",
+                  "    const mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));\r",
+                  "\r",
+                  "    const n1 = numAleatorio(9);\r",
+                  "    const n2 = numAleatorio(9);\r",
+                  "    const n3 = numAleatorio(9);\r",
+                  "    const n4 = numAleatorio(9);\r",
+                  "    const n5 = numAleatorio(9);\r",
+                  "    const n6 = numAleatorio(9);\r",
+                  "    const n7 = numAleatorio(9);\r",
+                  "    const n8 = numAleatorio(9);\r",
+                  "    const n9 = numAleatorio(9);\r",
+                  "\r",
+                  "    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;\r",
+                  "    d1 = 11 - (mod(d1, 11));\r",
+                  "    if (d1 >= 10) d1 = 0;\r",
+                  "    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;\r",
+                  "    d2 = 11 - (mod(d2, 11));\r",
+                  "    if (d2 >= 10) d2 = 0;\r",
+                  "    // Retorna o CPF formatado: 000.000.000-00\r",
+                  "    return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;\r",
+                  "    \r",
+                  "    // Se a sua API exigir APENAS números (sem pontos e hífen), use a linha abaixo:\r",
+                  "    // return `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;\r",
+                  "}\r",
+                  "\r",
+                  "// Salva o CPF gerado em uma variável de escopo local (Collection Variable)\r",
+                  "pm.collectionVariables.set(\"CpfValido\", gerarCPF());\r",
+                  "\r",
+                  "// numero de celular\r",
+                  "var numero = \"(81) 9999-0000\";\r",
+                  "pm.environment.set(\"NumberCell\", numero);\r",
+                  "\r",
+                  "// tipo do usuario\r",
+                  "function TypeRole () {\r",
+                  "    var TypeUsers = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];\r",
+                  "    var randomItem = TypeUsers[Math.floor(Math.random() * TypeUsers.length)];\r",
+                  "    return randomItem\r",
+                  "}\r",
+                  "pm.environment.set(\"TipoUsuario\", TypeRole() )\r",
+                  "\r",
+                  "function TypeCanalPreferido () {\r",
+                  "    var typeCanal = [\"email\", \"phone\"]\r",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]\r",
+                  "   return randomitemcanal\r",
+                  "}\r",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())\r",
+                  "\r",
+                  "// gera senhas de tamanho 8\r",
+                  "function gerarSenhaAleatoria(tamanhoMaximo) {\r",
+                  "    const caracteresMAIUSCULOS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+                  "    const caracteresMINUSCULOS = \"abcdefghijklmnopqrstuvwxyz\";\r",
+                  "    const caracteresESPECIAIS = \"!@#$%^&*()_+-=[]{}|;:,.<>?\"\r",
+                  "    const numerossenhas= \"1234567890\"\r",
+                  "\r",
+                  "    let senha = \"\";\r",
+                  "    \r",
+                  "    for (let i = 0; i < tamanhoMaximo; i++) {\r",
+                  "        indiceAleatorio = Math.floor(Math.random() * caracteresMAIUSCULOS.length);\r",
+                  "        senha += caracteresMAIUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresMINUSCULOS.length);\r",
+                  "        senha +=  caracteresMINUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresESPECIAIS.length);\r",
+                  "        senha +=  caracteresESPECIAIS.charAt(indiceAleatorio)\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  numerossenhas.length);\r",
+                  "        senha +=  numerossenhas.charAt(indiceAleatorio)\r",
+                  "    }\r",
+                  "    \r",
+                  "    return senha;\r",
+                  "}\r",
+                  "\r",
+                  "// Gera uma senha de 8 dígitos e salva na variável \"senhaValida\"\r",
+                  "pm.collectionVariables.set(\"SenhaValida\", gerarSenhaAleatoria(8));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Phone",
+          "item": [
+            {
+              "name": "Phone válido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();",
+                      "const user = jsonData.user;",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NomeCompleto\", function () {",
+                      "    pm.expect(pm.variables.get(\"NomeCompleto\")).to.eql(user.fullName);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar Email\", function () {",
+                      "    pm.expect(pm.variables.get(\"EMAIL\")).to.eql(user.email);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NumberCell\", function () {",
+                      "    pm.expect(pm.variables.get(\"NumberCell\")).to.eql(user.phone);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar TipoUsuario\", function () {",
+                      "    const validRoles = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];",
+                      "    pm.expect(validRoles).to.include(user.role);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar CpfValido\", function () {",
+                      "    pm.expect(pm.variables.get(\"CpfValido\")).to.eql(user.cpf);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar status user\", function () {",
+                      "    pm.expect(user.status).to.eql(\"active\");",
+                      "});",
+                      "",
+                      "pm.environment.set(\"ID\", user.id.toString());"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Phone com 1 num",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Phone não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.phone).to.equal(\"Telefone incompleto.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).phone",
+                      "    var variavel_phone = pm.response.json().details.phone",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_phone)",
+                      "})",
+                      "console.log(response.details.phone)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"0\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Phone string",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Phone não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.phone).to.equal(\"Telefone incompleto.\");",
+                      "    // A mensagem deveria ser Telefone \"inválido, digite apenas números\"",
+                      "});",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).phone",
+                      "    var variavel_phone = pm.response.json().details.phone",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_phone)",
+                      "})",
+                      "console.log(response.details.phone)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"bbbbbbbbbbb\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Phone vazio",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Phone não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.phone).to.equal(\"Informe o telefone.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).phone",
+                      "    var variavel_phone = pm.response.json().details.phone",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_phone)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Phone formatado",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Phone deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.not.be.undefined;",
+                      "});",
+                      "",
+                      "pm.test(\"Phone enviado não é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).phone",
+                      "    var variavel_phone = pm.response.json().user.phone",
+                      "    ",
+                      "    pm.expect(variavel_body).to.eql(variavel_phone)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"81 9101-2629\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Phone não formatado",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Phone deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.not.be.undefined;",
+                      "});",
+                      "",
+                      "pm.test(\"Phone enviado não é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).phone",
+                      "    var variavel_phone = pm.response.json().user.phone",
+                      "    ",
+                      "    pm.expect(variavel_body).to.eql(variavel_phone)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"8191012629\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Phone com espaço",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Phone não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.phone).to.equal(\"Informe o telefone.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).phone",
+                      "    var variavel_phone = pm.response.json().details.phone",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_phone)",
+                      "})",
+                      "",
+                      "// No front não permite o envio de espaço (BUG)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"81 9101 2629\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Phone sem ddd",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Phone não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.phone).to.equal(\"Telefone incompleto.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).phone",
+                      "    var variavel_phone = pm.response.json().details.phone",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_phone)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"9101 2629\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "// Gera um nome e um sobrenome e depois junta para formar o nome NomeCompleto\r",
+                  "function getFirstName() {\r",
+                  "    var names = [\"Miguel\", \"Sophia\", \"Davi\", \"Alice\", \"Arthur\", \"Julia\", \"Pedro\", \"Isabella\", \"Gabriel\", \"Manuela\", \"Bernardo\", \"Laura\", \"Lucas\", \"Flávia\", \"Luiza\", \"Matheus\", \"Noah\", \"Valentina\", \"Rafael\", \"Giovanna\", \"Heitor\", \"Enzo\", \"Helena\", \"Guilherme\", \"Beatriz\", \"Nicolas\", \"Leticia\", \"Lorenzo\", \"Lara\", \"Gustavo\", \"Mariana\", \"Felipe\"];\r",
+                  "    var randomItem = names[Math.floor(Math.random() * names.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "function getLastName() {\r",
+                  "    var lastNames = [\"Alves da Silva\", \"Andrade Barbosa\", \"Barbosa Oliveira\", \"Oliveira da Silva\", \"Alves Pereira\", \"Conceição Barbosa\", \"Allen Young\", \"Hernandez King\", \"Wright Lopez\", \"Hill Scott\", \"Green Adams\", \"Conceição da Costa\", \"da Costa Oliveira\", \"Rodrigues de Oliveira\"];\r",
+                  "    var randomItem = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "var fName = getFirstName();\r",
+                  "var lName = getLastName();\r",
+                  "\r",
+                  "pm.environment.set(\"FirstName\", fName);\r",
+                  "pm.environment.set(\"LastName\", lName);\r",
+                  "pm.environment.set(\"NomeCompleto\", fName + \" \" + lName);\r",
+                  "\r",
+                  "function getNumbeForEmail(vezes){\r",
+                  "    const numerosemail = [\"1\", \"2\", \"3\", \"4\", \"5\", \"7\", \"8\", \"9\", \"10\"]\r",
+                  "    var randomNumber = \"\";\r",
+                  "\r",
+                  "    for (let i = 0; i < vezes; i++) {\r",
+                  "        const indiceAleatorio = Math.floor(Math.random() * numerosemail.length);\r",
+                  "        randomNumber += numerosemail[indiceAleatorio];\r",
+                  "    }\r",
+                  "    return randomNumber\r",
+                  "}\r",
+                  "pm.environment.set(\"EMAIL\", fName.toLocaleLowerCase() + getNumbeForEmail(5) + \"@\" + \"gmail\" + \".com\");\r",
+                  "\r",
+                  "function gerarCPF() {\r",
+                  "    const numAleatorio = (n) => Math.round(Math.random() * n);\r",
+                  "    const mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));\r",
+                  "\r",
+                  "    const n1 = numAleatorio(9);\r",
+                  "    const n2 = numAleatorio(9);\r",
+                  "    const n3 = numAleatorio(9);\r",
+                  "    const n4 = numAleatorio(9);\r",
+                  "    const n5 = numAleatorio(9);\r",
+                  "    const n6 = numAleatorio(9);\r",
+                  "    const n7 = numAleatorio(9);\r",
+                  "    const n8 = numAleatorio(9);\r",
+                  "    const n9 = numAleatorio(9);\r",
+                  "\r",
+                  "    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;\r",
+                  "    d1 = 11 - (mod(d1, 11));\r",
+                  "    if (d1 >= 10) d1 = 0;\r",
+                  "    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;\r",
+                  "    d2 = 11 - (mod(d2, 11));\r",
+                  "    if (d2 >= 10) d2 = 0;\r",
+                  "    // Retorna o CPF formatado: 000.000.000-00\r",
+                  "    return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;\r",
+                  "    \r",
+                  "    // Se a sua API exigir APENAS números (sem pontos e hífen), use a linha abaixo:\r",
+                  "    // return `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;\r",
+                  "}\r",
+                  "\r",
+                  "// Salva o CPF gerado em uma variável de escopo local (Collection Variable)\r",
+                  "pm.collectionVariables.set(\"CpfValido\", gerarCPF());\r",
+                  "\r",
+                  "// numero de celular\r",
+                  "var numero = \"(81) 9999-0000\";\r",
+                  "pm.environment.set(\"NumberCell\", numero);\r",
+                  "\r",
+                  "// tipo do usuario\r",
+                  "function TypeRole () {\r",
+                  "    var TypeUsers = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];\r",
+                  "    var randomItem = TypeUsers[Math.floor(Math.random() * TypeUsers.length)];\r",
+                  "    return randomItem\r",
+                  "}\r",
+                  "pm.environment.set(\"TipoUsuario\", TypeRole() )\r",
+                  "\r",
+                  "function TypeCanalPreferido () {\r",
+                  "    var typeCanal = [\"email\", \"phone\"]\r",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]\r",
+                  "   return randomitemcanal\r",
+                  "}\r",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())\r",
+                  "\r",
+                  "// gera senhas de tamanho 8\r",
+                  "function gerarSenhaAleatoria(tamanhoMaximo) {\r",
+                  "    const caracteresMAIUSCULOS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+                  "    const caracteresMINUSCULOS = \"abcdefghijklmnopqrstuvwxyz\";\r",
+                  "    const caracteresESPECIAIS = \"!@#$%^&*()_+-=[]{}|;:,.<>?\"\r",
+                  "    const numerossenhas= \"1234567890\"\r",
+                  "\r",
+                  "    let senha = \"\";\r",
+                  "    \r",
+                  "    for (let i = 0; i < tamanhoMaximo; i++) {\r",
+                  "        indiceAleatorio = Math.floor(Math.random() * caracteresMAIUSCULOS.length);\r",
+                  "        senha += caracteresMAIUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresMINUSCULOS.length);\r",
+                  "        senha +=  caracteresMINUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresESPECIAIS.length);\r",
+                  "        senha +=  caracteresESPECIAIS.charAt(indiceAleatorio)\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  numerossenhas.length);\r",
+                  "        senha +=  numerossenhas.charAt(indiceAleatorio)\r",
+                  "    }\r",
+                  "    \r",
+                  "    return senha;\r",
+                  "}\r",
+                  "\r",
+                  "// Gera uma senha de 8 dígitos e salva na variável \"senhaValida\"\r",
+                  "pm.collectionVariables.set(\"SenhaValida\", gerarSenhaAleatoria(8));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Role",
+          "item": [
+            {
+              "name": "Role válido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();",
+                      "const user = jsonData.user;",
+                      "",
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NomeCompleto\", function () {",
+                      "    pm.expect(pm.variables.get(\"NomeCompleto\")).to.eql(user.fullName);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar Email\", function () {",
+                      "    pm.expect(pm.variables.get(\"EMAIL\")).to.eql(user.email);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar NumberCell\", function () {",
+                      "    pm.expect(pm.variables.get(\"NumberCell\")).to.eql(user.phone);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar TipoUsuario\", function () {",
+                      "    const validRoles = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];",
+                      "    pm.expect(validRoles).to.include(user.role);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar CpfValido\", function () {",
+                      "    pm.expect(pm.variables.get(\"CpfValido\")).to.eql(user.cpf);",
+                      "});",
+                      "",
+                      "pm.test(\"Validar status user\", function () {",
+                      "    pm.expect(user.status).to.eql(\"active\");",
+                      "});",
+                      "",
+                      "pm.environment.set(\"ID\", user.id.toString());"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Role =! all",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Role não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.role).to.equal(\"Selecione um perfil valido.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Role não é igual a nenhum dos tipos de user\", function() {",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    pm.expect((variavel_body =! \"qa-junior\") || (variavel_body =! \"qa-analyst\") || (variavel_body =! \"qa-automation\") || (variavel_body =! \"product\")) ",
+                      "})  ",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    var variavel_role = pm.response.json().details.role",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_role)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"programmer\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Role vazio",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Role não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.role).to.equal(\"Selecione um perfil valido.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Role não é igual a nenhum dos tipos de user\", function() {",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    pm.expect((variavel_body =! \"qa-junior\") || (variavel_body =! \"qa-analyst\") || (variavel_body =! \"qa-automation\") || (variavel_body =! \"product\")) ",
+                      "})  ",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    var variavel_role = pm.response.json().details.role",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_role)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Role number srt",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Role não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.role).to.equal(\"Selecione um perfil valido.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Role não é igual a nenhum dos tipos de user\", function() {",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    pm.expect((variavel_body =! \"qa-junior\") || (variavel_body =! \"qa-analyst\") || (variavel_body =! \"qa-automation\") || (variavel_body =! \"product\")) ",
+                      "})  ",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    var variavel_role = pm.response.json().details.role",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_role)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"12\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Role number",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "",
+                      "pm.test(\"Role não deve existir no response como user\", function () {",
+                      "    pm.expect(response.user).to.be.undefined;",
+                      "});",
+                      "",
+                      "",
+                      "pm.test(\"Phone message\", function () {",
+                      "    pm.expect(response.details.role).to.equal(\"Selecione um perfil valido.\");",
+                      "});",
+                      "",
+                      "pm.test(\"Role não é igual a nenhum dos tipos de user\", function() {",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    pm.expect((variavel_body =! \"qa-junior\") || (variavel_body =! \"qa-analyst\") || (variavel_body =! \"qa-automation\") || (variavel_body =! \"product\")) ",
+                      "})  ",
+                      "",
+                      "pm.test(\"Phone enviado é diferente do gravado\", function() {",
+                      "    ",
+                      "    var variavel_body = JSON.parse(pm.request.body.raw).role",
+                      "    var variavel_role = pm.response.json().details.role",
+                      "    ",
+                      "    pm.expect(variavel_body).not.to.eql(variavel_role)",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": 10,\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "// Gera um nome e um sobrenome e depois junta para formar o nome NomeCompleto\r",
+                  "function getFirstName() {\r",
+                  "    var names = [\"Miguel\", \"Sophia\", \"Davi\", \"Alice\", \"Arthur\", \"Julia\", \"Pedro\", \"Isabella\", \"Gabriel\", \"Manuela\", \"Bernardo\", \"Laura\", \"Lucas\", \"Flávia\", \"Luiza\", \"Matheus\", \"Noah\", \"Valentina\", \"Rafael\", \"Giovanna\", \"Heitor\", \"Enzo\", \"Helena\", \"Guilherme\", \"Beatriz\", \"Nicolas\", \"Leticia\", \"Lorenzo\", \"Lara\", \"Gustavo\", \"Mariana\", \"Felipe\"];\r",
+                  "    var randomItem = names[Math.floor(Math.random() * names.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "function getLastName() {\r",
+                  "    var lastNames = [\"Alves da Silva\", \"Andrade Barbosa\", \"Barbosa Oliveira\", \"Oliveira da Silva\", \"Alves Pereira\", \"Conceição Barbosa\", \"Allen Young\", \"Hernandez King\", \"Wright Lopez\", \"Hill Scott\", \"Green Adams\", \"Conceição da Costa\", \"da Costa Oliveira\", \"Rodrigues de Oliveira\"];\r",
+                  "    var randomItem = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "var fName = getFirstName();\r",
+                  "var lName = getLastName();\r",
+                  "\r",
+                  "pm.environment.set(\"FirstName\", fName);\r",
+                  "pm.environment.set(\"LastName\", lName);\r",
+                  "pm.environment.set(\"NomeCompleto\", fName + \" \" + lName);\r",
+                  "\r",
+                  "function getNumbeForEmail(vezes){\r",
+                  "    const numerosemail = [\"1\", \"2\", \"3\", \"4\", \"5\", \"7\", \"8\", \"9\", \"10\"]\r",
+                  "    var randomNumber = \"\";\r",
+                  "\r",
+                  "    for (let i = 0; i < vezes; i++) {\r",
+                  "        const indiceAleatorio = Math.floor(Math.random() * numerosemail.length);\r",
+                  "        randomNumber += numerosemail[indiceAleatorio];\r",
+                  "    }\r",
+                  "    return randomNumber\r",
+                  "}\r",
+                  "pm.environment.set(\"EMAIL\", fName.toLocaleLowerCase() + getNumbeForEmail(5) + \"@\" + \"gmail\" + \".com\");\r",
+                  "\r",
+                  "\r",
+                  "function gerarCPF() {\r",
+                  "    const numAleatorio = (n) => Math.round(Math.random() * n);\r",
+                  "    const mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));\r",
+                  "\r",
+                  "    const n1 = numAleatorio(9);\r",
+                  "    const n2 = numAleatorio(9);\r",
+                  "    const n3 = numAleatorio(9);\r",
+                  "    const n4 = numAleatorio(9);\r",
+                  "    const n5 = numAleatorio(9);\r",
+                  "    const n6 = numAleatorio(9);\r",
+                  "    const n7 = numAleatorio(9);\r",
+                  "    const n8 = numAleatorio(9);\r",
+                  "    const n9 = numAleatorio(9);\r",
+                  "\r",
+                  "    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;\r",
+                  "    d1 = 11 - (mod(d1, 11));\r",
+                  "    if (d1 >= 10) d1 = 0;\r",
+                  "    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;\r",
+                  "    d2 = 11 - (mod(d2, 11));\r",
+                  "    if (d2 >= 10) d2 = 0;\r",
+                  "    // Retorna o CPF formatado: 000.000.000-00\r",
+                  "    return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;\r",
+                  "    \r",
+                  "    // Se a sua API exigir APENAS números (sem pontos e hífen), use a linha abaixo:\r",
+                  "    // return `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;\r",
+                  "}\r",
+                  "\r",
+                  "// Salva o CPF gerado em uma variável de escopo local (Collection Variable)\r",
+                  "pm.collectionVariables.set(\"CpfValido\", gerarCPF());\r",
+                  "\r",
+                  "// numero de celular\r",
+                  "var numero = \"(81) 9999-0000\";\r",
+                  "pm.environment.set(\"NumberCell\", numero);\r",
+                  "\r",
+                  "// tipo do usuario\r",
+                  "function TypeRole () {\r",
+                  "    var TypeUsers = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];\r",
+                  "    var randomItem = TypeUsers[Math.floor(Math.random() * TypeUsers.length)];\r",
+                  "    return randomItem\r",
+                  "}\r",
+                  "pm.environment.set(\"TipoUsuario\", TypeRole() )\r",
+                  "\r",
+                  "function TypeCanalPreferido () {\r",
+                  "    var typeCanal = [\"email\", \"phone\"]\r",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]\r",
+                  "   return randomitemcanal\r",
+                  "}\r",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())\r",
+                  "\r",
+                  "function TypeCanalPreferido () {\r",
+                  "    var typeCanal = [\"email\", \"phone\"]\r",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]\r",
+                  "   return randomitemcanal\r",
+                  "}\r",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())\r",
+                  "\r",
+                  "// gera senhas de tamanho 8\r",
+                  "function gerarSenhaAleatoria(tamanhoMaximo) {\r",
+                  "    const caracteresMAIUSCULOS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+                  "    const caracteresMINUSCULOS = \"abcdefghijklmnopqrstuvwxyz\";\r",
+                  "    const caracteresESPECIAIS = \"!@#$%^&*()_+-=[]{}|;:,.<>?\"\r",
+                  "    const numerossenhas= \"1234567890\"\r",
+                  "\r",
+                  "    let senha = \"\";\r",
+                  "    \r",
+                  "    for (let i = 0; i < tamanhoMaximo; i++) {\r",
+                  "        indiceAleatorio = Math.floor(Math.random() * caracteresMAIUSCULOS.length);\r",
+                  "        senha += caracteresMAIUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresMINUSCULOS.length);\r",
+                  "        senha +=  caracteresMINUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresESPECIAIS.length);\r",
+                  "        senha +=  caracteresESPECIAIS.charAt(indiceAleatorio)\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  numerossenhas.length);\r",
+                  "        senha +=  numerossenhas.charAt(indiceAleatorio)\r",
+                  "    }\r",
+                  "    \r",
+                  "    return senha;\r",
+                  "}\r",
+                  "\r",
+                  "// Gera uma senha de 8 dígitos e salva na variável \"senhaValida\"\r",
+                  "pm.collectionVariables.set(\"SenhaValida\", gerarSenhaAleatoria(8));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ContactPreference",
+          "item": [
+            {
+              "name": "Cont. pref. válido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();\r",
+                      "const user = jsonData.user;\r",
+                      "\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc existe\", function () {\r",
+                      "    pm.expect(JSON.parse(pm.request.body.raw).contactPreference).to.not.be.undefined;\r",
+                      "})\r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc não é vazio no body\", function () {\r",
+                      "    pm.expect(JSON.parse(pm.request.body.raw).contactPreference).to.not.be.empty;\r",
+                      "})\r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc não é vazio no response\", function () {\r",
+                      "    pm.expect(jsonData.user.contactPreference).to.not.be.empty;\r",
+                      "})\r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc é igual as opções disponiveis\", function () {\r",
+                      "    var type_canal= JSON.parse(pm.request.body.raw).contactPreference\r",
+                      "        pm.expect(type_canal== \"email\" || type_canal == \"phone\")\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cont. pref. vazio",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "const jsonData = pm.response.json();\r",
+                      "const user = jsonData.user;\r",
+                      "\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc existe\", function () {\r",
+                      "    pm.expect(JSON.parse(pm.request.body.raw).contactPreference).to.not.be.undefined;\r",
+                      "})\r",
+                      "\r",
+                      "// pm.test(\"ContactPreferenc não é vazio no body\", function () {\r",
+                      "//     pm.expect(JSON.parse(pm.request.body.raw).contactPreference).to.not.be.empty;\r",
+                      "// }) Por padrão contactPreference é email, portanto ao não enviar nada, ele é considerado email, então não é vazio. Então não é necessário testar se não é vazio no body. \r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc não é vazio no response\", function () {\r",
+                      "    pm.expect(jsonData.user.contactPreference).to.not.be.empty;\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cont. pref. !=",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "const jsonData = pm.response.json();\r",
+                      "const user = jsonData.user;\r",
+                      "\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc existe\", function () {\r",
+                      "    pm.expect(JSON.parse(pm.request.body.raw).contactPreference).to.not.be.undefined;\r",
+                      "})\r",
+                      "\r",
+                      "// pm.test(\"ContactPreferenc não é vazio no body\", function () {\r",
+                      "//     pm.expect(JSON.parse(pm.request.body.raw).contactPreference).to.not.be.empty;\r",
+                      "// }) Por padrão contactPreference é email, portanto ao não enviar nada, ele é considerado email, então não é vazio. Então não é necessário testar se não é vazio no body. \r",
+                      "\r",
+                      "pm.test(\"ContactPreferenc não é vazio no response\", function () {\r",
+                      "    pm.expect(jsonData.user.contactPreference).to.not.be.empty;\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"hotmail\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "// Gera um nome e um sobrenome e depois junta para formar o nome NomeCompleto\r",
+                  "function getFirstName() {\r",
+                  "    var names = [\"Miguel\", \"Sophia\", \"Davi\", \"Alice\", \"Arthur\", \"Julia\", \"Pedro\", \"Isabella\", \"Gabriel\", \"Manuela\", \"Bernardo\", \"Laura\", \"Lucas\", \"Flávia\", \"Luiza\", \"Matheus\", \"Noah\", \"Valentina\", \"Rafael\", \"Giovanna\", \"Heitor\", \"Enzo\", \"Helena\", \"Guilherme\", \"Beatriz\", \"Nicolas\", \"Leticia\", \"Lorenzo\", \"Lara\", \"Gustavo\", \"Mariana\", \"Felipe\"];\r",
+                  "    var randomItem = names[Math.floor(Math.random() * names.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "function getLastName() {\r",
+                  "    var lastNames = [\"Alves da Silva\", \"Andrade Barbosa\", \"Barbosa Oliveira\", \"Oliveira da Silva\", \"Alves Pereira\", \"Conceição Barbosa\", \"Allen Young\", \"Hernandez King\", \"Wright Lopez\", \"Hill Scott\", \"Green Adams\", \"Conceição da Costa\", \"da Costa Oliveira\", \"Rodrigues de Oliveira\"];\r",
+                  "    var randomItem = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "var fName = getFirstName();\r",
+                  "var lName = getLastName();\r",
+                  "\r",
+                  "pm.environment.set(\"FirstName\", fName);\r",
+                  "pm.environment.set(\"LastName\", lName);\r",
+                  "pm.environment.set(\"NomeCompleto\", fName + \" \" + lName);\r",
+                  "\r",
+                  "function getNumbeForEmail(vezes){\r",
+                  "    const numerosemail = [\"1\", \"2\", \"3\", \"4\", \"5\", \"7\", \"8\", \"9\", \"10\"]\r",
+                  "    var randomNumber = \"\";\r",
+                  "\r",
+                  "    for (let i = 0; i < vezes; i++) {\r",
+                  "        const indiceAleatorio = Math.floor(Math.random() * numerosemail.length);\r",
+                  "        randomNumber += numerosemail[indiceAleatorio];\r",
+                  "    }\r",
+                  "    return randomNumber\r",
+                  "}\r",
+                  "pm.environment.set(\"EMAIL\", fName.toLocaleLowerCase() + getNumbeForEmail(5) + \"@\" + \"gmail\" + \".com\");\r",
+                  "\r",
+                  "function gerarCPF() {\r",
+                  "    const numAleatorio = (n) => Math.round(Math.random() * n);\r",
+                  "    const mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));\r",
+                  "\r",
+                  "    const n1 = numAleatorio(9);\r",
+                  "    const n2 = numAleatorio(9);\r",
+                  "    const n3 = numAleatorio(9);\r",
+                  "    const n4 = numAleatorio(9);\r",
+                  "    const n5 = numAleatorio(9);\r",
+                  "    const n6 = numAleatorio(9);\r",
+                  "    const n7 = numAleatorio(9);\r",
+                  "    const n8 = numAleatorio(9);\r",
+                  "    const n9 = numAleatorio(9);\r",
+                  "\r",
+                  "    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;\r",
+                  "    d1 = 11 - (mod(d1, 11));\r",
+                  "    if (d1 >= 10) d1 = 0;\r",
+                  "    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;\r",
+                  "    d2 = 11 - (mod(d2, 11));\r",
+                  "    if (d2 >= 10) d2 = 0;\r",
+                  "    // Retorna o CPF formatado: 000.000.000-00\r",
+                  "    return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;\r",
+                  "    \r",
+                  "    // Se a sua API exigir APENAS números (sem pontos e hífen), use a linha abaixo:\r",
+                  "    // return `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;\r",
+                  "}\r",
+                  "\r",
+                  "// Salva o CPF gerado em uma variável de escopo local (Collection Variable)\r",
+                  "pm.collectionVariables.set(\"CpfValido\", gerarCPF());\r",
+                  "\r",
+                  "// numero de celular\r",
+                  "var numero = \"(81) 9999-0000\";\r",
+                  "pm.environment.set(\"NumberCell\", numero);\r",
+                  "\r",
+                  "// tipo do usuario\r",
+                  "function TypeRole () {\r",
+                  "    var TypeUsers = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];\r",
+                  "    var randomItem = TypeUsers[Math.floor(Math.random() * TypeUsers.length)];\r",
+                  "    return randomItem\r",
+                  "}\r",
+                  "pm.environment.set(\"TipoUsuario\", TypeRole() )\r",
+                  "\r",
+                  "// gera senhas de tamanho 8\r",
+                  "function gerarSenhaAleatoria(tamanhoMaximo) {\r",
+                  "    const caracteresMAIUSCULOS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+                  "    const caracteresMINUSCULOS = \"abcdefghijklmnopqrstuvwxyz\";\r",
+                  "    const caracteresESPECIAIS = \"!@#$%^&*()_+-=[]{}|;:,.<>?\"\r",
+                  "    const numerossenhas= \"1234567890\"\r",
+                  "\r",
+                  "    let senha = \"\";\r",
+                  "    \r",
+                  "    for (let i = 0; i < tamanhoMaximo; i++) {\r",
+                  "        indiceAleatorio = Math.floor(Math.random() * caracteresMAIUSCULOS.length);\r",
+                  "        senha += caracteresMAIUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresMINUSCULOS.length);\r",
+                  "        senha +=  caracteresMINUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresESPECIAIS.length);\r",
+                  "        senha +=  caracteresESPECIAIS.charAt(indiceAleatorio)\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  numerossenhas.length);\r",
+                  "        senha +=  numerossenhas.charAt(indiceAleatorio)\r",
+                  "    }\r",
+                  "    \r",
+                  "    return senha;\r",
+                  "}\r",
+                  "\r",
+                  "// Gera uma senha de 8 dígitos e salva na variável \"senhaValida\"\r",
+                  "pm.collectionVariables.set(\"SenhaValida\", gerarSenhaAleatoria(8));\r",
+                  "\r",
+                  "function TypeCanalPreferido () {\r",
+                  "    var typeCanal = [\"email\", \"phone\"]\r",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]\r",
+                  "   return randomitemcanal\r",
+                  "}\r",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Password",
+          "item": [
+            {
+              "name": "Passaword válido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();\r",
+                      "const user = jsonData.user;\r",
+                      "\r",
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Password existe\", function () {\r",
+                      "    pm.expect(JSON.parse(pm.request.body.raw).password).to.not.be.undefined;\r",
+                      "})\r",
+                      "\r",
+                      "pm.test(\"Password não é vazio\", function () {\r",
+                      "    pm.expect(JSON.parse(pm.request.body.raw).password).to.not.be.empty;\r",
+                      "})\r",
+                      "\r",
+                      "pm.test(\"Password não retorna no response user\", function () {\r",
+                      "    var variavel_body_password =JSON.parse(pm.request.body.raw).password\r",
+                      "\r",
+                      "        pm.expect(variavel_body_password).not in jsonData\r",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"{{SenhaValida}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Password vazio",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "pm.test(\"Message error password\", function(){",
+                      "    pm.expect(response.details.password).to.equal(\"Use 8+ caracteres com letra maiuscula, numero e simbolo.\");",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Password fraca",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "pm.test(\"Message error password\", function(){",
+                      "    pm.expect(response.details.password).to.equal(\"Use 8+ caracteres com letra maiuscula, numero e simbolo.\");",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"senha10_\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Password apenas number",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "pm.test(\"Message error password\", function(){",
+                      "    pm.expect(response.details.password).to.equal(\"Use 8+ caracteres com letra maiuscula, numero e simbolo.\");",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"1234567890\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Password number",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "pm.test(\"Message error password\", function(){",
+                      "    pm.expect(response.details.password).to.equal(\"Use 8+ caracteres com letra maiuscula, numero e simbolo.\");",
+                      "})",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": 1234567890\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Password sem carc. especial",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "pm.test(\"Message error password\", function(){",
+                      "    pm.expect(response.details.password).to.equal(\"Use 8+ caracteres com letra maiuscula, numero e simbolo.\");",
+                      "})",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": \"senha90123kjshk\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Password letras sem \"\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 422 or 400\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([422, 400]);",
+                      "});",
+                      "pm.test(\"Message error password\", function(){",
+                      "    pm.expect(response.message).to.equal(\"JSON invalido.\");",
+                      "})",
+                      "pm.test(\"Password não existe\", function(){",
+                      "    pm.expect(response.password).to.not.exist in response",
+                      "})",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\": \"{{NomeCompleto}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"cpf\": \"{{CpfValido}}\",\r\n    \"phone\": \"{{NumberCell}}\",\r\n    \"role\": \"{{TipoUsuario}}\",\r\n    \"contactPreference\": \"{{ContactPreference}}\",\r\n    \"password\": senha90123kjshk\r\n}"
+                },
+                "url": {
+                  "raw": "{{URL}}",
+                  "host": [
+                    "{{URL}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "// Gera um nome e um sobrenome e depois junta para formar o nome NomeCompleto\r",
+                  "function getFirstName() {\r",
+                  "    var names = [\"Miguel\", \"Sophia\", \"Davi\", \"Alice\", \"Arthur\", \"Julia\", \"Pedro\", \"Isabella\", \"Gabriel\", \"Manuela\", \"Bernardo\", \"Laura\", \"Lucas\", \"Flávia\", \"Luiza\", \"Matheus\", \"Noah\", \"Valentina\", \"Rafael\", \"Giovanna\", \"Heitor\", \"Enzo\", \"Helena\", \"Guilherme\", \"Beatriz\", \"Nicolas\", \"Leticia\", \"Lorenzo\", \"Lara\", \"Gustavo\", \"Mariana\", \"Felipe\"];\r",
+                  "    var randomItem = names[Math.floor(Math.random() * names.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "function getLastName() {\r",
+                  "    var lastNames = [\"Alves da Silva\", \"Andrade Barbosa\", \"Barbosa Oliveira\", \"Oliveira da Silva\", \"Alves Pereira\", \"Conceição Barbosa\", \"Allen Young\", \"Hernandez King\", \"Wright Lopez\", \"Hill Scott\", \"Green Adams\", \"Conceição da Costa\", \"da Costa Oliveira\", \"Rodrigues de Oliveira\"];\r",
+                  "    var randomItem = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+                  "    return randomItem;\r",
+                  "}\r",
+                  "\r",
+                  "var fName = getFirstName();\r",
+                  "var lName = getLastName();\r",
+                  "\r",
+                  "pm.environment.set(\"FirstName\", fName);\r",
+                  "pm.environment.set(\"LastName\", lName);\r",
+                  "pm.environment.set(\"NomeCompleto\", fName + \" \" + lName);\r",
+                  "\r",
+                  "function getNumbeForEmail(vezes){\r",
+                  "    const numerosemail = [\"1\", \"2\", \"3\", \"4\", \"5\", \"7\", \"8\", \"9\", \"10\"]\r",
+                  "    var randomNumber = \"\";\r",
+                  "\r",
+                  "    for (let i = 0; i < vezes; i++) {\r",
+                  "        const indiceAleatorio = Math.floor(Math.random() * numerosemail.length);\r",
+                  "        randomNumber += numerosemail[indiceAleatorio];\r",
+                  "    }\r",
+                  "    return randomNumber\r",
+                  "}\r",
+                  "pm.environment.set(\"EMAIL\", fName.toLocaleLowerCase() + getNumbeForEmail(5) + \"@\" + \"gmail\" + \".com\");\r",
+                  "\r",
+                  "\r",
+                  "function gerarCPF() {\r",
+                  "    const numAleatorio = (n) => Math.round(Math.random() * n);\r",
+                  "    const mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));\r",
+                  "\r",
+                  "    const n1 = numAleatorio(9);\r",
+                  "    const n2 = numAleatorio(9);\r",
+                  "    const n3 = numAleatorio(9);\r",
+                  "    const n4 = numAleatorio(9);\r",
+                  "    const n5 = numAleatorio(9);\r",
+                  "    const n6 = numAleatorio(9);\r",
+                  "    const n7 = numAleatorio(9);\r",
+                  "    const n8 = numAleatorio(9);\r",
+                  "    const n9 = numAleatorio(9);\r",
+                  "\r",
+                  "    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;\r",
+                  "    d1 = 11 - (mod(d1, 11));\r",
+                  "    if (d1 >= 10) d1 = 0;\r",
+                  "    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;\r",
+                  "    d2 = 11 - (mod(d2, 11));\r",
+                  "    if (d2 >= 10) d2 = 0;\r",
+                  "    // Retorna o CPF formatado: 000.000.000-00\r",
+                  "    return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;\r",
+                  "    \r",
+                  "    // Se a sua API exigir APENAS números (sem pontos e hífen), use a linha abaixo:\r",
+                  "    // return `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;\r",
+                  "}\r",
+                  "\r",
+                  "// Salva o CPF gerado em uma variável de escopo local (Collection Variable)\r",
+                  "pm.collectionVariables.set(\"CpfValido\", gerarCPF());\r",
+                  "\r",
+                  "// numero de celular\r",
+                  "var numero = \"(81) 9999-0000\";\r",
+                  "pm.environment.set(\"NumberCell\", numero);\r",
+                  "\r",
+                  "// tipo do usuario\r",
+                  "function TypeRole () {\r",
+                  "    var TypeUsers = [\"qa-junior\", \"qa-analyst\", \"qa-automation\", \"product\"];\r",
+                  "    var randomItem = TypeUsers[Math.floor(Math.random() * TypeUsers.length)];\r",
+                  "    return randomItem\r",
+                  "}\r",
+                  "pm.environment.set(\"TipoUsuario\", TypeRole() )\r",
+                  "\r",
+                  "// gera senhas de tamanho 8\r",
+                  "function gerarSenhaAleatoria(tamanhoMaximo) {\r",
+                  "    const caracteresMAIUSCULOS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+                  "    const caracteresMINUSCULOS = \"abcdefghijklmnopqrstuvwxyz\";\r",
+                  "    const caracteresESPECIAIS = \"!@#$%^&*()_+-=[]{}|;:,.<>?\"\r",
+                  "    const numerossenhas= \"1234567890\"\r",
+                  "\r",
+                  "    let senha = \"\";\r",
+                  "    \r",
+                  "    for (let i = 0; i < tamanhoMaximo; i++) {\r",
+                  "        indiceAleatorio = Math.floor(Math.random() * caracteresMAIUSCULOS.length);\r",
+                  "        senha += caracteresMAIUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresMINUSCULOS.length);\r",
+                  "        senha +=  caracteresMINUSCULOS.charAt(indiceAleatorio);\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  caracteresESPECIAIS.length);\r",
+                  "        senha +=  caracteresESPECIAIS.charAt(indiceAleatorio)\r",
+                  "        indiceAleatorio = Math.floor(Math.random() *  numerossenhas.length);\r",
+                  "        senha +=  numerossenhas.charAt(indiceAleatorio)\r",
+                  "    }\r",
+                  "    \r",
+                  "    return senha;\r",
+                  "}\r",
+                  "\r",
+                  "// Gera uma senha de 8 dígitos e salva na variável \"senhaValida\"\r",
+                  "pm.collectionVariables.set(\"SenhaValida\", gerarSenhaAleatoria(8));\r",
+                  "\r",
+                  "function TypeCanalPreferido () {\r",
+                  "    var typeCanal = [\"email\", \"phone\"]\r",
+                  "    var randomitemcanal = typeCanal[Math.floor(Math.random() * typeCanal.length)]\r",
+                  "   return randomitemcanal\r",
+                  "}\r",
+                  "pm.environment.set(\"ContactPreference\", TypeCanalPreferido())"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Api running",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "CpfValido",
+      "value": ""
+    },
+    {
+      "key": "senhaValida",
+      "value": ""
+    },
+    {
+      "key": "SenhaValida",
+      "value": ""
+    }
+  ]
+}

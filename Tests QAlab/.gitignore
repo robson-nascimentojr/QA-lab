@@ -1,0 +1,4 @@
+results/
+test-robot/log/
+__pycache__/
+*.py[cod]

@@ -334,7 +334,7 @@ function renderUsers(users) {
 
         row.innerHTML = `
             <td>
-                <span class="user-name">${escapeHtml(user.fullName)}</span>
+                <span id=user-loc-name class="user-name">${escapeHtml(user.fullName)}</span>
                 <span class="user-meta">${escapeHtml(user.email)} | ${escapeHtml(user.cpf)}</span>
             </td>
             <td>${roleLabels[user.role] || user.role}</td>

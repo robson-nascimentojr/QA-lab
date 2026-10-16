@@ -11,17 +11,6 @@
     "createdAt": "2026-05-18T13:20:00.000Z"
   },
   {
-    "id": "usr_demo_beta",
-    "fullName": "Usuario Demo Beta",
-    "email": "usuario.demo.beta@example.com",
-    "cpf": "345.678.901-75",
-    "phone": "(99) 90000-0002",
-    "role": "qa-automation",
-    "contactPreference": "phone",
-    "status": "active",
-    "createdAt": "2026-05-19T10:15:00.000Z"
-  },
-  {
     "id": "usr_demo_gamma",
     "fullName": "Usuario Demo Gamma",
     "email": "usuario.demo.gamma@example.com",
